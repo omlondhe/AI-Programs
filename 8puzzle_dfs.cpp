@@ -62,7 +62,9 @@ int main()
     // vector<vector<int>> input = {{1, 2, 5},
     //                              {8, 6, 3},
     //                              {7, 4, 0}};
-    vector<vector<int>> input = {{1, 2, 3}, {8, 4, 0}, {7, 6, 5}};
+    vector<vector<int>> input = {{1, 2, 3},
+                                 {8, 4, 0},
+                                 {7, 6, 5}};
     vector<vector<int>> output = {{1, 2, 3},
                                   {8, 0, 4},
                                   {7, 6, 5}};
