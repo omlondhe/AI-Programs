@@ -6,7 +6,7 @@ bool isSafe(int i, int j)
     return i >= 0 && j >= 0 && i < 3 && j < 3;
 }
 
-int getNumberOfMisplacedTiles(vector<vector<int>> input, vector<vector<int>> output)
+int getNumberOfMisplacedTiles(vector<vector<int>> &input, vector<vector<int>> &output)
 {
     int misplaced = 0;
     for (int i = 0; i < 3; i++)
@@ -20,7 +20,7 @@ int getNumberOfMisplacedTiles(vector<vector<int>> input, vector<vector<int>> out
     return misplaced == 0 ? 0 : misplaced - 1;
 }
 
-void print(vector<vector<int>> arr)
+void print(vector<vector<int>> &arr)
 {
     for (int i = 0; i < 3; i++)
     {
@@ -86,6 +86,7 @@ int solve(vector<vector<int>> &input, vector<vector<int>> &output, pair<int, int
     q.push(new QueueItem(-1, -1, index.first, index.second, input));
     int depth = 0;
     int numberOfMisplacedTiles = getNumberOfMisplacedTiles(input, output);
+    int f = depth + numberOfMisplacedTiles;
 
     while (!q.empty())
     {
@@ -116,7 +117,7 @@ int solve(vector<vector<int>> &input, vector<vector<int>> &output, pair<int, int
                         return depth;
                     }
                     minimumNumberOfMisplacedTiled = min(minimumNumberOfMisplacedTiled, numberOfMisplacedTiles);
-                    minHeap.push({numberOfMisplacedTiles, new PuzzleAndZeroPosition(i, j, newI, newJ, currentInput)});
+                    minHeap.push({numberOfMisplacedTiles + depth, new PuzzleAndZeroPosition(i, j, newI, newJ, currentInput)});
                     swap(currentInput[i][j], currentInput[newI][newJ]);
                 }
             }
