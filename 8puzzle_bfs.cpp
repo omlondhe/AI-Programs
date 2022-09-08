@@ -73,6 +73,20 @@ pair<int, int> getBlank(vector<vector<int>> input)
 
 int main()
 {
+    // vector<vector<int>> input = {{1, 2, 5},
+    //                              {8, 6, 3},
+    //                              {7, 4, 0}};
+    // vector<vector<int>> output = {{1, 2, 3},
+    //                               {8, 0, 4},
+    //                               {7, 6, 5}};
+
+    // vector<vector<int>> input = {{1, 2, 3},
+    //                              {0, 4, 6},
+    //                              {7, 5, 8}};
+    // vector<vector<int>> output = {{1, 2, 3},
+    //                               {4, 5, 6},
+    //                               {7, 8, 0}};
+
     vector<vector<int>> input = {{1, 2, 5},
                                  {8, 6, 3},
                                  {7, 4, 0}};

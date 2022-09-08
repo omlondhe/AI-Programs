@@ -34,47 +34,13 @@ void print(vector<vector<int>> &arr)
 class QueueItem
 {
 public:
-    int parentI;
-    int parentJ;
-    int i;
-    int j;
     vector<vector<int>> input;
+    pair<int, int> index;
 
-    QueueItem(int parentI,
-              int parentJ,
-              int i,
-              int j,
-              vector<vector<int>> input)
+    QueueItem(vector<vector<int>> input, pair<int, int> index)
     {
-        this->parentI = parentI;
-        this->parentJ = parentJ;
-        this->i = i;
-        this->j = j;
         this->input = input;
-    }
-};
-
-class PuzzleAndZeroPosition
-{
-public:
-    int i;
-    int j;
-    int newI;
-    int newJ;
-    vector<vector<int>> input;
-
-    PuzzleAndZeroPosition(
-        int i,
-        int j,
-        int newI,
-        int newJ,
-        vector<vector<int>> input)
-    {
-        this->i = i;
-        this->j = j;
-        this->newI = newI;
-        this->newJ = newJ;
-        this->input = input;
+        this->index = index;
     }
 };
 
@@ -82,57 +48,39 @@ int solve(vector<vector<int>> &input, vector<vector<int>> &output, pair<int, int
 {
     int iMove[] = {-1, 1, 0, 0};
     int jMove[] = {0, 0, -1, 1};
-    queue<QueueItem *> q;
-    q.push(new QueueItem(-1, -1, index.first, index.second, input));
     int depth = 0;
-    int numberOfMisplacedTiles = getNumberOfMisplacedTiles(input, output);
-    int f = depth + numberOfMisplacedTiles;
+    priority_queue<pair<int, QueueItem *>, vector<pair<int, QueueItem *>>, greater<pair<int, QueueItem *>>> minHeap;
+    minHeap.push({depth + getNumberOfMisplacedTiles(input, output), new QueueItem(input, index)});
 
-    while (!q.empty())
+    while (!minHeap.empty())
     {
-        int n = q.size();
+        pair<int, QueueItem *> top = minHeap.top();
+        minHeap.pop();
+        int f = top.first;
+        vector<vector<int>> currentInput = top.second->input;
+        int i = top.second->index.first;
+        int j = top.second->index.second;
         depth++;
-        priority_queue<pair<int, PuzzleAndZeroPosition *>, vector<pair<int, PuzzleAndZeroPosition *>>, greater<pair<int, PuzzleAndZeroPosition *>>> minHeap;
-        int minimumNumberOfMisplacedTiled = INT_MAX;
 
-        while (n--)
+        for (int k = 0; k < 4; k++)
         {
-            QueueItem *front = q.front();
-            q.pop();
-            int i = front->i;
-            int j = front->j;
-            vector<vector<int>> currentInput = front->input;
+            int newI = i + iMove[k];
+            int newJ = j + jMove[k];
 
-            for (int k = 0; k < 4; k++)
+            if (isSafe(newI, newJ))
             {
-                int newI = i + iMove[k];
-                int newJ = j + jMove[k];
-                if (isSafe(newI, newJ) && newI != front->parentI && newJ != front->parentJ)
-                {
-                    swap(currentInput[i][j], currentInput[newI][newJ]);
-                    numberOfMisplacedTiles = getNumberOfMisplacedTiles(currentInput, output);
-                    if (numberOfMisplacedTiles == 0)
-                    {
-                        print(currentInput);
-                        return depth;
-                    }
-                    minimumNumberOfMisplacedTiled = min(minimumNumberOfMisplacedTiled, numberOfMisplacedTiles);
-                    minHeap.push({numberOfMisplacedTiles + depth, new PuzzleAndZeroPosition(i, j, newI, newJ, currentInput)});
-                    swap(currentInput[i][j], currentInput[newI][newJ]);
-                }
+                swap(currentInput[newI][newJ], currentInput[i][j]);
+                int misplacedTiles = getNumberOfMisplacedTiles(currentInput, output);
+                print(currentInput);
+                if (misplacedTiles == 0)
+                    return depth;
+                minHeap.push({depth + misplacedTiles, new QueueItem(currentInput, {newI, newJ})});
+                swap(currentInput[newI][newJ], currentInput[i][j]);
             }
-        }
-
-        while (!minHeap.empty() && minHeap.top().first == minimumNumberOfMisplacedTiled)
-        {
-            PuzzleAndZeroPosition *puzzleAndZeroPosition = minHeap.top().second;
-            minHeap.pop();
-            q.push(new QueueItem(puzzleAndZeroPosition->i, puzzleAndZeroPosition->j, puzzleAndZeroPosition->newI, puzzleAndZeroPosition->newJ, puzzleAndZeroPosition->input));
-            print(puzzleAndZeroPosition->input);
         }
     }
 
-    return depth;
+    return -1;
 }
 
 pair<int, int> getBlank(vector<vector<int>> input)
@@ -151,14 +99,14 @@ pair<int, int> getBlank(vector<vector<int>> input)
 int main()
 {
     // looping
-    // vector<vector<int>> input = {{1, 2, 5},
-    //                              {8, 6, 3},
-    //                              {7, 4, 0}};
-    // vector<vector<int>> output = {{1, 2, 3},
-    //                               {8, 0, 4},
-    //                               {7, 6, 5}};
+    vector<vector<int>> input = {{1, 2, 5},
+                                 {8, 6, 3},
+                                 {7, 4, 0}};
+    vector<vector<int>> output = {{1, 2, 3},
+                                  {8, 0, 4},
+                                  {7, 6, 5}};
 
-    // working
+    // // working
     // vector<vector<int>> input = {{1, 2, 3},
     //                              {0, 4, 6},
     //                              {7, 5, 8}};
@@ -167,12 +115,12 @@ int main()
     //                               {7, 8, 0}};
 
     // looping
-    vector<vector<int>> input = {{1, 2, 3},
-                                 {8, 0, 4},
-                                 {7, 6, 5}};
-    vector<vector<int>> output = {{2, 8, 1},
-                                  {0, 4, 3},
-                                  {7, 6, 5}};
+    // vector<vector<int>> input = {{1, 2, 3},
+    //                              {8, 0, 4},
+    //                              {7, 6, 5}};
+    // vector<vector<int>> output = {{2, 8, 1},
+    //                               {0, 4, 3},
+    //                               {7, 6, 5}};
 
     cout << solve(input, output, getBlank(input)) << "\n";
 
