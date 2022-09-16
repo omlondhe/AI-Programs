@@ -1,11 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// function to check if the block we are trying to move is save to move or not
 bool isSafe(int i, int j)
 {
     return i >= 0 && j >= 0 && i < 3 && j < 3;
 }
 
+// getting number of misplaced tiles
 int getNumberOfMisplacedTiles(vector<vector<int>> &input, vector<vector<int>> &output)
 {
     int misplaced = 0;
@@ -20,6 +22,7 @@ int getNumberOfMisplacedTiles(vector<vector<int>> &input, vector<vector<int>> &o
     return misplaced == 0 ? 0 : misplaced - 1;
 }
 
+// printing the 8-puzzle
 void print(vector<vector<int>> &arr)
 {
     for (int i = 0; i < 3; i++)
@@ -31,6 +34,7 @@ void print(vector<vector<int>> &arr)
     cout << "\n";
 }
 
+// custom class to add data to the priority_queue
 class QueueItem
 {
 public:
@@ -49,6 +53,7 @@ int solve(vector<vector<int>> &input, vector<vector<int>> &output, pair<int, int
     int iMove[] = {-1, 1, 0, 0};
     int jMove[] = {0, 0, -1, 1};
     int depth = 0;
+    // priority queue with "f(n) = g(n) + h(n)" as min priority value
     priority_queue<pair<int, QueueItem *>, vector<pair<int, QueueItem *>>, greater<pair<int, QueueItem *>>> minHeap;
     minHeap.push({depth + getNumberOfMisplacedTiles(input, output), new QueueItem(input, index)});
 
@@ -83,6 +88,7 @@ int solve(vector<vector<int>> &input, vector<vector<int>> &output, pair<int, int
     return -1;
 }
 
+// getting the index of blank cell blank cell
 pair<int, int> getBlank(vector<vector<int>> input)
 {
     for (int i = 0; i < 3; i++)
@@ -98,31 +104,28 @@ pair<int, int> getBlank(vector<vector<int>> input)
 
 int main()
 {
-    // looping
-    vector<vector<int>> input = {{1, 2, 5},
-                                 {8, 6, 3},
-                                 {7, 4, 0}};
+    vector<vector<int>> input = {{1, 2, 3},
+                                 {0, 4, 6},
+                                 {7, 5, 8}};
     vector<vector<int>> output = {{1, 2, 3},
-                                  {8, 0, 4},
-                                  {7, 6, 5}};
+                                  {4, 5, 6},
+                                  {7, 8, 0}};
 
-    // // working
-    // vector<vector<int>> input = {{1, 2, 3},
-    //                              {0, 4, 6},
-    //                              {7, 5, 8}};
+    // vector<vector<int>> input = {{1, 2, 5},
+    //                              {8, 6, 3},
+    //                              {7, 4, 0}};
     // vector<vector<int>> output = {{1, 2, 3},
-    //                               {4, 5, 6},
-    //                               {7, 8, 0}};
-
-    // looping
-    // vector<vector<int>> input = {{1, 2, 3},
-    //                              {8, 0, 4},
-    //                              {7, 6, 5}};
-    // vector<vector<int>> output = {{2, 8, 1},
-    //                               {0, 4, 3},
+    //                               {8, 0, 4},
     //                               {7, 6, 5}};
 
     cout << solve(input, output, getBlank(input)) << "\n";
 
     return 0;
 }
+
+// vector<vector<int>> input = {{1, 2, 3},
+//                              {8, 0, 4},
+//                              {7, 6, 5}};
+// vector<vector<int>> output = {{2, 8, 1},
+//                               {0, 4, 3},
+//                               {7, 6, 5}};

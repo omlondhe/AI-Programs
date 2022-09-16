@@ -1,11 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// function to check if the block we are trying to move is save to move or not
 bool isSafe(int i, int j)
 {
     return i >= 0 && j >= 0 && i < 3 && j < 3;
 }
 
+// printing the 8-puzzle
 void print(vector<vector<int>> arr)
 {
     for (int i = 0; i < 3; i++)
@@ -53,6 +55,7 @@ int solve(vector<vector<int>> &input, vector<vector<int>> &output, pair<int, int
                 }
             }
         }
+        cout << "------\n\n";
     }
 
     return iterations;
@@ -73,26 +76,19 @@ pair<int, int> getBlank(vector<vector<int>> input)
 
 int main()
 {
+    vector<vector<int>> input = {{1, 2, 3},
+                                 {0, 4, 6},
+                                 {7, 5, 8}};
+    vector<vector<int>> output = {{1, 2, 3},
+                                  {4, 5, 6},
+                                  {7, 8, 0}};
+
     // vector<vector<int>> input = {{1, 2, 5},
     //                              {8, 6, 3},
     //                              {7, 4, 0}};
     // vector<vector<int>> output = {{1, 2, 3},
     //                               {8, 0, 4},
     //                               {7, 6, 5}};
-
-    // vector<vector<int>> input = {{1, 2, 3},
-    //                              {0, 4, 6},
-    //                              {7, 5, 8}};
-    // vector<vector<int>> output = {{1, 2, 3},
-    //                               {4, 5, 6},
-    //                               {7, 8, 0}};
-
-    vector<vector<int>> input = {{1, 2, 5},
-                                 {8, 6, 3},
-                                 {7, 4, 0}};
-    vector<vector<int>> output = {{1, 2, 3},
-                                  {8, 0, 4},
-                                  {7, 6, 5}};
 
     cout << solve(input, output, getBlank(input)) << "\n";
 
